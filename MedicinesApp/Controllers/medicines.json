@@ -1,0 +1,26 @@
+[
+  {
+    "Name": "Combiflam",
+    "Brand": "pfizer",
+    "Price": 12.34,
+    "Quantity": 80,
+    "ExpiryDate": "7/24/2020 12:00:00 AM",
+    "Notes": ""
+  },
+  {
+    "Name": "paracetamol",
+    "Brand": "Himalaya",
+    "Price": 999.99,
+    "Quantity": 809,
+    "ExpiryDate": "9/24/2020 12:00:00 AM",
+    "Notes": ""
+  },
+  {
+    "Name": "pudin hara",
+    "Brand": "Dabur",
+    "Price": 1.00,
+    "Quantity": 8,
+    "ExpiryDate": "7/2/2020 12:00:00 AM",
+    "Notes": ""
+  }
+]

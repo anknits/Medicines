@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Medicine App</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+    <h4>All Medicines</h4>
+    <div>
+        <table id="medicines" class="table">
+            <tr>
+                <th>Name</th>
+                <th>Brand</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>ExpiryDate</th>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <h4>Search by Name</h4>
+        <input type="text" id="searchTextBox" size="5" />
+        <input type="button" id="searchBtn" value="Search" onclick="find();" />
+        <p id="medicine" />
+    </div>
+
+    <script>
+        var uri = 'api/medicines';
+
+        $(document).ready(function () {
+            $.getJSON(uri)
+                .done(function (data) {
+                    $.each(data, function (key, item) {
+                        PopulateTable(item);
+                    });
+                });
+        });
+
+        function PopulateTable(item) {
+            var tableHeader;
+            var tableData = '<td>' + item.Name + '</td>' + '<td>' + item.Brand + '</td>' + '<td>' + item.Price + '</td>' + '<td>' + item.Quantity + '</td>' + '<td>' + item.ExpiryDate.substring(0, 10) + '</td>';
+            var dateToCompare = new Date();
+            dateToCompare.setHours(0, 0, 0, 0);
+            dateToCompare.setDate(dateToCompare.getDate() + 30);
+            if (item.Quantity < 10) {
+                tableHeader = '<tr class="warning">' + tableData + '</tr>';
+            }
+            else if (new Date(item.ExpiryDate) < dateToCompare) {
+                tableHeader = '<tr class="danger">' + tableData + '</tr>';
+            }
+            else tableHeader = '<tr>' + tableData + '</tr>';
+            $(tableHeader).appendTo($('#medicines'));
+        }
+
+        function EmptyTable() {
+            table = document.getElementById("medicines");
+            tr = table.getElementsByTagName("tr");
+            for (i = 1; i < tr.length; i++) {
+                tr[i].style.display = "none";
+            }
+        }
+
+        function find() {
+            var name = $('#searchTextBox').val();
+            $.getJSON(uri + '/' + name)
+                .done(function (data) {
+                    EmptyTable();
+                    $.each(data, function (key, item) {
+                        PopulateTable(item);
+                    });
+                    //$('#medicine').text(formatItem(data));
+                })
+                .fail(function (jqXHR, textStatus, err) {
+                    //$('#medicine').text('Error: not found' + err);
+                });
+        }
+
+        var searchTextBox = document.getElementById("searchTextBox");
+        searchTextBox.addEventListener("keyup", function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                document.getElementById("searchBtn").click();
+            }
+        });
+    </script>
+</body>
+</html>
